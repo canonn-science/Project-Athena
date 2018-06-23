@@ -1,0 +1,35 @@
+{
+  "connection": "default",
+  "collectionName": "btreports",
+  "info": {
+    "name": "btreport",
+    "description": "Reporting for Brain Trees"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "systemName": {
+      "type": "string",
+      "required": true,
+      "x-data-description": "System Name"
+    },
+    "bodyName": {
+      "type": "string",
+      "required": true,
+      "x-data-description": "Body Name"
+    },
+    "latitude": {
+      "type": "float",
+      "required": true,
+      "x-data-description": "Coordinate Latitude"
+    },
+    "longitude": {
+      "type": "float",
+      "required": true,
+      "x-data-description": "Coordinate Longitude"
+    }
+  }
+}

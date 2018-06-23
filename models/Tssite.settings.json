@@ -1,0 +1,55 @@
+{
+  "connection": "default",
+  "collectionName": "tssites",
+  "info": {
+    "name": "tssite",
+    "description": "Thargoid Structure sites",
+    "endpoint": "https://api.canonn.tech:2053/tssite"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "location": {
+      "model": "location",
+      "x-data-description": "Structure Location",
+      "via": "tsSite"
+    },
+    "siteID": {
+      "unique": true,
+      "min": 1,
+      "type": "integer",
+      "x-data-description": "Thargoid Structure ID (TSID)",
+      "required": true
+    },
+    "latitude": {
+      "type": "float",
+      "x-data-description": "Coordinate Latitude",
+      "required": true
+    },
+    "longitude": {
+      "type": "float",
+      "x-data-description": "Coordinate Longitude",
+      "required": true
+    },
+    "status": {
+      "model": "tsstatus",
+      "x-data-description": "Thargoid Site Status"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false,
+      "x-data-render": false
+    },
+    "visible": {
+      "default": true,
+      "type": "boolean",
+      "x-data-render": false
+    },
+    "discoveredBy": {
+      "model": "cmdr"
+    }
+  }
+}

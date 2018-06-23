@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<%- include('../partials/head', {title: model.title}); %>
+</head>
+<body class="container">
+<header>
+    <% include ../partials/header %>
+</header>
+
+<main>
+    <div class="jumbotron">
+        <h1><%=model.title%></h1>
+    </div>
+</main>
+
+
+
+<form method="post" action="<%=model.endpoint%>">
+
+	<% for(var i=0; i<model.fields.length; i++) {
+		var input = model.fields[i];
+		%>
+
+	  <div class="form-group">
+	    <label for="<%=input.name%>"><%=input.description%></label>
+	    <input type="text" class="form-control" id="<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Enter <%=input.description%>">
+	    <small id="<%=input.name%>Help" class="form-text text-muted">Enter info for <%=input.description%></small>
+	    <small id="<%=input.name%>Notes" class="form-text text-muted">Required: <%=input.required%>; Render: <%=input.render%>; Type: <%=input.type%>; </small>
+	  </div>
+
+	<% } %>
+
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>
