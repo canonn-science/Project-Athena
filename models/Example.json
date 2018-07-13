@@ -1,0 +1,58 @@
+{
+  "name":"example",
+  "description":"Example API endpoint",
+  "endpoint": "https://api.canonn.tech:2053/examplereport",
+  "collectionName": "examples",
+  "fields": {
+    "string": {
+      "description":"Sample String Type",
+      "type": "string"
+    },
+    "integer": {
+      "description":"Sample Integer Type",
+      "type": "integer",
+      "render": false,
+      "default": 20
+    },
+    "float": {
+      "description":"Sample Float Type/Coord Lat",
+      "type": "decimal",
+      "minimum": 0,
+      "maximum":90
+    },
+    "decimal": {
+      "description":"Sample Decimal Type/Coord Lng",
+      "type": "decimal",
+      "minimum": -180,
+      "maximum":180
+    },
+    "date": {
+      "description":"Sample Date Type",
+      "type": "date",
+      "dateonly":true
+    },
+    "email": {
+      "description":"Sample Email String",
+      "type": "string",
+      "format":"email"
+    },
+    "enum": {
+      "description":"Sample List",
+      "type": "list",
+      "values": [
+        "blah",
+        "test",
+        "example"
+      ]
+    },
+    "text": {
+      "description":"Sample Multiline Text Input",
+      "type": "string",
+      "multiline":true
+    },
+    "boolean": {
+      "description":"Sample Boolean",
+      "type": "boolean"
+    }
+  }
+}

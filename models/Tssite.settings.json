@@ -14,6 +14,7 @@
   "attributes": {
     "location": {
       "model": "location",
+      "default": "Sol",
       "x-data-description": "Structure Location",
       "via": "tsSite"
     },
@@ -21,35 +22,41 @@
       "unique": true,
       "min": 1,
       "type": "integer",
+      "default": "12345",
       "x-data-description": "Thargoid Structure ID (TSID)",
       "required": true
     },
     "latitude": {
       "type": "float",
+      "default": "22",
       "x-data-description": "Coordinate Latitude",
       "required": true
     },
     "longitude": {
       "type": "float",
+      "default": "33",
       "x-data-description": "Coordinate Longitude",
       "required": true
     },
     "status": {
       "model": "tsstatus",
+      "default": "active",
       "x-data-description": "Thargoid Site Status"
     },
     "verified": {
       "type": "boolean",
-      "default": false,
-      "x-data-render": false
+      "default": "false",
+      "x-data-render": false,
+      "x-data-exclude": true
     },
     "visible": {
-      "default": true,
+      "default": "true",
       "type": "boolean",
       "x-data-render": false
     },
     "discoveredBy": {
-      "model": "cmdr"
+      "model": "cmdr",
+      "default": "AdmlAdama"
     }
   }
 }

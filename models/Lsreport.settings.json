@@ -1,10 +1,9 @@
 {
   "connection": "default",
-  "collectionName": "btreports",
+  "collectionName": "lsreports",
   "info": {
-    "name": "btreport",
-    "description": "Reporting for Brain Trees",
-    "endpoint": "https://api.canonn.tech:2053/btreport"
+    "name": "lsreport",
+    "description": "Reporting for Lava Spouts"
   },
   "options": {
     "increments": true,
@@ -13,47 +12,35 @@
   },
   "attributes": {
     "systemName": {
-      "x-data-description": "System Name",
       "type": "string",
       "required": true
     },
     "bodyName": {
-      "x-data-description": "Body Name",
       "type": "string",
       "required": true
     },
     "latitude": {
-      "x-data-description": "Latitude",
-      "x-data-group": "coords",
       "type": "float",
       "required": true
     },
     "longitude": {
-      "x-data-description": "Longitude",
-      "x-data-group": "coords",
       "type": "float",
       "required": true
     },
     "count": {
-      "x-data-description": "Number of Brain Trees",
       "min": 1,
       "type": "integer"
     },
     "cmdrName": {
-      "x-data-description": "Commander Name",
-      "default": "AdmlAdama",
       "type": "string",
       "required": true
     },
     "screenshot": {
-      "x-data-description": "Screenshot",
-      "x-data-type": "image",
       "collection": "file",
       "via": "related",
       "plugin": "upload"
     },
     "reportStatus": {
-
       "enum": [
         "pending",
         "accepted",
@@ -61,25 +48,19 @@
         "issue"
       ],
       "type": "enumeration",
-      "required": true,
-      "x-data-render": false,
-      "default": "pending"
+      "required": true
     },
     "comment": {
-      "x-data-description": "Comments",
       "type": "text"
     },
     "voteCount": {
-      "type": "integer",
-      "x-data-render": false
+      "type": "integer"
     },
     "added": {
-      "type": "boolean",
-      "x-data-render": false
+      "type": "boolean"
     },
     "site": {
-      "model": "bmsite",
-      "x-data-render": false
+      "model": "bmsite"
     }
   }
 }

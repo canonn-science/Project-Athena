@@ -7,6 +7,14 @@ app.set('view engine', 'ejs');
 
 var router = express.Router();
 
+//https://api.canonn.tech/grartifact
+//https://api.canonn.tech:2053/tssite
+
+
+
+
+
+
 app.get('/', function(req, res) {
 
 	var info = {
@@ -26,9 +34,10 @@ app.get('/', function(req, res) {
 		var field = {
 				name:attrName,
 				description:attr['x-data-description'] || attrName,
-				type:attr.type || 'string',
+				type:attr['x-data-type'] || attr.type || 'string',
 				required: attr.required || false,
 				default: attr.default || '',
+				exclude: attr['x-data-exclude'] || false,
 				render: attr.hasOwnProperty("x-data-render")? attr['x-data-render'] : true
 			}
 		
