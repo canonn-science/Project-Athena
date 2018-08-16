@@ -8,7 +8,7 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "comment": "Need to update type to match current types"
+    "comment": ""
   },
   "attributes": {
     "systemName": {
@@ -29,19 +29,29 @@
     },
     "type": {
       "enum": [
-        "Structure",
-        "Type1",
-        "Type2",
-        "Type3",
-        "Type4",
-        "Type5"
+        "Lacrosse",
+        "Crossroads",
+        "Fistbump",
+        "Hammerbot",
+        "Bear",
+        "Bowl",
+        "Turtle"
       ],
       "type": "enumeration",
       "required": true
     },
+    "hasDatabank": {
+      "type": "boolean"
+    },
     "cmdrName": {
       "type": "string",
       "required": true
+    },
+    "cmdrComment": {
+      "type": "text"
+    },
+    "isBeta": {
+      "type": "boolean"
     },
     "screenshot": {
       "collection": "file",
@@ -49,16 +59,18 @@
       "plugin": "upload"
     },
     "reportStatus": {
+      "default": "pending",
+      "type": "enumeration",
+      "required": true,
       "enum": [
         "pending",
-        "accepted",
-        "declined",
-        "issue"
-      ],
-      "type": "enumeration",
-      "required": true
+        " updated",
+        " accepted",
+        " declined",
+        " issue"
+      ]
     },
-    "comment": {
+    "reportComment": {
       "type": "text"
     },
     "voteCount": {
@@ -68,7 +80,15 @@
       "type": "boolean"
     },
     "site": {
-      "model": "bmsite"
+      "model": "gssite"
+    },
+    "gsobeliskgroupreport": {
+      "collection": "gsobeliskgroupreport",
+      "via": "gsreport"
+    },
+    "gsobeliskreport": {
+      "collection": "gsobeliskreport",
+      "via": "gsreport"
     }
   }
 }

@@ -35,6 +35,27 @@
       "type": "enumeration",
       "required": true
     },
+    "cycle": {
+      "enum": [
+        "Unknown",
+        "A",
+        "B",
+        "C",
+        "ABC"
+      ],
+      "type": "enumeration",
+      "required": true
+    },
+    "defense": {
+      "enum": [
+        "None",
+        "Capship",
+        "Drones",
+        "Thargbots",
+        "Turrets"
+      ],
+      "type": "enumeration"
+    },
     "count": {
       "min": 1,
       "type": "integer"
@@ -43,22 +64,30 @@
       "type": "string",
       "required": true
     },
+    "cmdrComment": {
+      "type": "text"
+    },
+    "isBeta": {
+      "type": "boolean"
+    },
     "screenshot": {
       "collection": "file",
       "via": "related",
       "plugin": "upload"
     },
     "reportStatus": {
+      "default": "pending",
+      "type": "enumeration",
+      "required": true,
       "enum": [
         "pending",
+        "updated",
         "accepted",
         "declined",
         "issue"
-      ],
-      "type": "enumeration",
-      "required": true
+      ]
     },
-    "comment": {
+    "reportComment": {
       "type": "text"
     },
     "voteCount": {
@@ -68,7 +97,7 @@
       "type": "boolean"
     },
     "site": {
-      "model": "bmsite"
+      "model": "tbsite"
     }
   }
 }

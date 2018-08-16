@@ -57,7 +57,7 @@ function getReportInfo(reportName){
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.get('/', function(req, res) {
-	var info = getReportInfo('btreport');
+	var info = getReportInfo('Btreport');
 
     res.render('pages/index',{model:info});
 });
