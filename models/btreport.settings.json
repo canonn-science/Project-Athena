@@ -50,10 +50,10 @@
       "x-data-type": "image",
       "collection": "file",
       "via": "related",
-      "plugin": "upload"
+      "plugin": "upload",
+      "x-data-render": false
     },
     "reportStatus": {
-
       "enum": [
         "pending",
         "accepted",
@@ -65,21 +65,25 @@
       "x-data-render": false,
       "default": "pending"
     },
-    "comment": {
+    "reportComment": {
       "x-data-description": "Comments",
       "type": "text"
     },
     "voteCount": {
       "type": "integer",
-      "x-data-render": false
+      "x-data-render": false,
+      "default": 0
     },
     "added": {
       "type": "boolean",
-      "x-data-render": false
+      "x-data-render": false,
+      "default": true
     },
     "site": {
+      "type": "integer",
       "model": "bmsite",
-      "x-data-render": false
+      "x-data-render": false,
+      "default": 0
     }
   }
 }

@@ -16,7 +16,8 @@
 
 
 
-<form method="post" action="#">
+<form method="post" action="/submit">
+	<input type="hidden" name="reportname" value="<%=model.name%>">
 
 	<% for(var i=0; i<model.fields.length; i++) {
 		var input = model.fields[i];
@@ -26,15 +27,16 @@
 
 		  <div class="form-group">
 		    <label for="<%=input.name%>"><%=input.description%></label>
-		    <input type="text" class="form-control reportitem" id="<%=input.name%>" name="<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Enter <%=input.description%>" value="<%= input.default %>">
+		    <input type="text" class="form-control reportitem" id="<%=input.name%>" name="fld-<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Enter <%=input.description%>" value="<%= input.default %>">
 		    
 		  </div>
 
 		<% }else if (false == input.exclude){ %>
-			<input type="hidden" class="form-control reportitem" name="<%=input.name%>" id="<%=input.name%>" value="<%= input.default %>">
+			<input type="hidden" class="form-control reportitem" name="fld-<%=input.name%>" id="<%=input.name%>" value="<%= input.default %>">
 		<% } %>
 
 
+		<% if( false ) { %>
 		<div>
 			<% Object.keys(input).forEach(function(key) { 
 				var val = input[key];
@@ -43,49 +45,18 @@
 			<% }); %>
 		</div>
 		<HR>
+		<% } %>
 
 
 	<% } %>
 
 
-  <button type="button" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <footer>
     <% include ../partials/footer %>
 </footer>
-
-<script>
-
-$(document).ready(function() {
-	$('.btn-primary').on('click', function() {
-		var data={};
-
-		$( '.reportitem' ).each(function( index ) {
-			data[$( this ).attr('name')] = $( this ).val();
-		});
-
-
-		$.ajax({
-		  type: 'POST',
-		  url: '<%=model.endpoint%>',
-		  data: data,
-		  done: function(product) {
-		    alert('done');
-		  },
-		  fail: function(error) {
-			console.log('An error occurred:', error);
-		  	alert('Error' + error);
-		    
-		  }
-		});
-
-	});
-
-
-});
-
-</script>
 
 </body>
 </html>
