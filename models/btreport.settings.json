@@ -4,7 +4,7 @@
   "info": {
     "name": "btreport",
     "description": "Reporting for Brain Trees",
-    "endpoint": "https://api.canonn.tech:2053/btreport"
+    "endpoint": "https://api.canonn.tech:2083/btreport"
   },
   "options": {
     "increments": true,
@@ -45,45 +45,50 @@
       "type": "string",
       "required": true
     },
+    "cmdrComment": {
+      "x-data-description": "Comments",
+      "type": "text"
+    },
+    "isBeta": {
+      "x-data-render": false,
+      "type": "boolean"
+    },
     "screenshot": {
       "x-data-description": "Screenshot",
       "x-data-type": "image",
       "collection": "file",
       "via": "related",
-      "plugin": "upload",
-      "x-data-render": false
+      "plugin": "upload"
     },
     "reportStatus": {
-      "enum": [
-        "pending",
-        "accepted",
-        "declined",
-        "issue"
-      ],
+      "x-data-render": false,
+      "default": "pending",
       "type": "enumeration",
       "required": true,
-      "x-data-render": false,
-      "default": "pending"
+      "enum": [
+        "pending",
+        " updated",
+        " accepted",
+        " declined",
+        " issue"
+      ]
     },
     "reportComment": {
-      "x-data-description": "Comments",
+      "x-data-render": false,
       "type": "text"
     },
     "voteCount": {
-      "type": "integer",
       "x-data-render": false,
-      "default": 0
+      "type": "integer"
     },
     "added": {
-      "type": "boolean",
       "x-data-render": false,
-      "default": true
+      "type": "boolean",
+      "default": false
     },
     "site": {
-      "type": "integer",
-      "model": "bmsite",
       "x-data-render": false,
-      "default": 0
+      "model": "btsite"
     }
   }
 }
