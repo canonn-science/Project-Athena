@@ -40,30 +40,22 @@
       "type": "string",
       "required": true
     },
-    "cmdrComment": {
-      "type": "text"
-    },
-    "isBeta": {
-      "type": "boolean"
-    },
     "screenshot": {
       "collection": "file",
       "via": "related",
       "plugin": "upload"
     },
     "reportStatus": {
-      "default": "pending",
-      "type": "enumeration",
-      "required": true,
       "enum": [
         "pending",
-        " updated",
-        " accepted",
-        " declined",
-        " issue"
-      ]
+        "accepted",
+        "declined",
+        "issue"
+      ],
+      "type": "enumeration",
+      "required": true
     },
-    "reportComment": {
+    "comment": {
       "type": "text"
     },
     "voteCount": {
@@ -73,15 +65,7 @@
       "type": "boolean"
     },
     "site": {
-      "model": "grsite"
-    },
-    "grobeliskgroupreport": {
-      "collection": "grobeliskgroupreport",
-      "via": "grreport"
-    },
-    "grobeliskreport": {
-      "collection": "grobeliskreport",
-      "via": "grreport"
+      "model": "bmsite"
     }
   }
 }

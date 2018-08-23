@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%- include('../partials/head', {title: "Select Report"}); %>
+	<%- include('../partials/head', {title: "Offline"}); %>
 </head>
 <body class="container">
 <header>
@@ -15,16 +15,7 @@
 </main>
 
 
-
-<% for(var i=0; i<reports.length; i++) {
-	var reportInfo = reports[i];
-	%>
-	<div>
-		<td><a href="/report/<%= reportInfo.name %>"><%= reportInfo.display %></a></td>
-	</div>
-<% } %>
-
-
+Site is offline for maintenance
 
 <footer>
     <% include ../partials/footer %>

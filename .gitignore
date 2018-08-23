@@ -71,6 +71,3 @@ typings/
 
 # Serverless directories
 .serverless
-
-# Remove crap lock file
-package-lock.json

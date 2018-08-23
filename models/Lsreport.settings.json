@@ -35,30 +35,22 @@
       "type": "string",
       "required": true
     },
-    "cmdrComment": {
-      "type": "text"
-    },
-    "isBeta": {
-      "type": "boolean"
-    },
     "screenshot": {
       "collection": "file",
       "via": "related",
       "plugin": "upload"
     },
     "reportStatus": {
-      "default": "pending",
-      "type": "enumeration",
-      "required": true,
       "enum": [
         "pending",
-        " updated",
-        " accepted",
-        " declined",
-        " issue"
-      ]
+        "accepted",
+        "declined",
+        "issue"
+      ],
+      "type": "enumeration",
+      "required": true
     },
-    "reportComment": {
+    "comment": {
       "type": "text"
     },
     "voteCount": {
@@ -68,7 +60,7 @@
       "type": "boolean"
     },
     "site": {
-      "model": "lssite"
+      "model": "bmsite"
     }
   }
 }
