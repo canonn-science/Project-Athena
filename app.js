@@ -1,131 +1,211 @@
-
 var express = require("express");
 var path = require("path");
 var fs = require('fs');
-var app = express();
-var bodyParser = require('body-parser')
-const request = require('request');
+//const request = require('request');
+var rp = require('request-promise');
 
-app.set('view engine', 'ejs');
-
-var router = express.Router();
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-//Get the models
+//Application info
 var appInfo = {
 	online:false,
-	models:getModels(path.join(__dirname, 'models'))
+	models:{}
 }
 
-//Have models?
+//Default
+var address = 'api.canonn.tech';
 
-if(Object.keys(appInfo.models).length > 0){
-	appInfo.online = true;
+//Change address?
+if(process.env.NODE_ENV === 'development'){
+	//Development
+	address = 'api.canonn.tech:2083';
+}else if(process.env.NODE_ENV === 'staging'){
+	//Staging
+	address = 'api.canonn.tech:2053';	
 }
+
+// Get the directory
+fetchJSON('https://' + address + '/models/directory.json') //Get the directory
+.then(result => { //Now get the model files
+	
+	var reportsData = Object.keys(result.reports).map(key => ({
+        modelName: key, modelAddress: result.reports[key]
+    }));
+
+
+	const promises = reportsData.map(async reportInfo => {
+	    //Fetch and set our models
+	    var modelInfo = await fetchJSON('https://' + address + '/models/' + reportInfo.modelAddress);
+
+	    appInfo.models[reportInfo.modelName] = parseModelInfo(modelInfo);
+
+	    return appInfo.models;
+	  })
+
+	// wait until all promises resolve
+	return Promise.all(promises);
+
+}).then(function(){
+	serverListen();
+}).catch(function(err){
+	logError('critical',err);
+	process.exit(9);
+})
 
 /***************************************************************************************
-Route / 
+serverListen - Start the server to accept connections
+Inputs - None
+Outputs - None
 ***************************************************************************************/
-app.get('/', function(req, res) {
-	//Offline?
-	if(false === appInfo.online){
-		return res.render('pages/offline');
+function serverListen(){
+
+	//Setup express
+	var app = express();
+	var bodyParser = require('body-parser')
+
+	var port = process.env.PORT || 5000;
+	app.set('view engine', 'ejs');
+
+	var router = express.Router();
+	var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+	//Have models?
+
+	if(Object.keys(appInfo.models).length > 0){
+		appInfo.online = true;
 	}
 
-	var reportItems = [];
-
-	//Add each key
-	Object.keys(appInfo.models).forEach(function(key) {
-		var reportModel = appInfo.models[key];
-
-		reportItems.push({name:reportModel.name,display:reportModel.title});
-	});
-
-
-	res.render('pages/index',{reports:reportItems});
-});
-
-
-app.get('/report/:reportname', function(req, res) {
-	//Offline?
-	if(false === appInfo.online){
-		return res.render('pages/offline');
-	}
-
-	//Get the report name
-	getModelByName(req.params.reportname,function(modelInfo,err){
-		if(err){
-			//Unable to find the model
-			res.send('There was an error.  Can\'t find the requested report');
-		}else{
-			//Get the model
-			res.render('pages/report',{model:modelInfo});
+	/***************************************************************************************
+	Route / 
+	***************************************************************************************/
+	app.get('/', function(req, res) {
+		//Offline?
+		if(false === appInfo.online){
+			return res.render('pages/offline');
 		}
+
+		var reportItems = [];
+
+		//Add each key
+		Object.keys(appInfo.models).forEach(function(key) {
+			var reportModel = appInfo.models[key];
+
+			reportItems.push({name:reportModel.name,display:reportModel.title});
+		});
+
+
+		res.render('pages/index',{reports:reportItems});
 	});
-});
 
 
-// POST method route
-app.all('/submit/:reportname', urlencodedParser, function (req, res) {
-	//Offline?
-	if(false === appInfo.online){
-		return res.render('pages/offline');
-	}
+	app.get('/report/:reportname', function(req, res) {
+		//Offline?
+		if(false === appInfo.online){
+			return res.render('pages/offline');
+		}
 
-	var reportName = sanitizeAlphaNumeric(req.params.reportname);
-
-	//Get the report name
-	getModelByName(reportName,function(modelInfo,err){
-		if(err){
-			//Unable to find the model
-			res.send('There was an error.  Can\'t find the requested report');
-		}else{
-			var reportRequest = {};
-
-			//Populate the data and submit
-			for(var i=0; i<modelInfo.fields.length; i++) {
-				var input = modelInfo.fields[i];
-				
-				if(false == input.exclude){
-					var val = req.body['fld-' + input.name] || input.default;
-
-					if(input.type == 'boolean'){
-						val = (val == 'true');
-					}else if(input.type == 'integer'){
-						val = parseInt(val);
-					}else if(input.type == 'float'){
-						val = parseFloat(val);
-					}
-
-					reportRequest[input.name]=val;	
-				}
+		//Get the report name
+		getModelByName(req.params.reportname,function(modelInfo,err){
+			if(err){
+				//Unable to find the model
+				res.send('There was an error.  Can\'t find the requested report');
+			}else{
+				//Get the model
+				res.render('pages/report',{model:modelInfo});
 			}
-
-			//Send data
-			request('https://api.canonn.tech:2083/' + reportName, { json: true, method: 'POST', body: reportRequest}, function (err, response, body) {
-			    if (err) {
-					console.log('Error');
-					console.log(err);
-					res.send('There was an error');
-			    }else if(response.statusCode != 200){
-			    	
-			    	console.log('Failed request:' + response.statusCode + ' ' + response.message);
-					res.send('Failed request:' + response.statusCode + ' ' + response.message);
-			    }else{
-			    	modelInfo.id = body.id;
-			    	res.render('pages/submitted',{model:modelInfo});
-				}
-			});
+		});
+	});
 
 
+	// POST method route
+	app.all('/submit/:reportname', urlencodedParser, function (req, res) {
+		//Offline?
+		if(false === appInfo.online){
+			return res.render('pages/offline');
 		}
-	});	
-});
 
-var port = process.env.PORT || 5000;
-app.listen(port, function() {
-	console.log("Listening on " + port);
-});
+		var reportName = sanitizeAlphaNumeric(req.params.reportname);
+
+		//Get the report name
+		getModelByName(reportName,function(modelInfo,err){
+			if(err){
+				//Unable to find the model
+				res.send('There was an error.  Can\'t find the requested report');
+			}else{
+				var reportRequest = {};
+
+				//Populate the data and submit
+				for(var i=0; i<modelInfo.fields.length; i++) {
+					var input = modelInfo.fields[i];
+					
+					if(false == input.exclude){
+						var val = req.body['fld-' + input.name] || input.default;
+
+						if(input.type == 'boolean'){
+							val = (val == 'true');
+						}else if(input.type == 'integer'){
+							val = parseInt(val);
+						}else if(input.type == 'float'){
+							val = parseFloat(val);
+						}
+
+						reportRequest[input.name]=val;	
+					}
+				}
+
+				//Send data
+				fetchJSON('https://api.canonn.tech:2083/' + reportName,{ method: 'POST', body: reportRequest}).then(function (response) {
+					//Post succeeded
+					modelInfo.id = response.id;
+					res.render('pages/submitted',{model:modelInfo});
+					return 1;
+	    		}).catch(function(errResponse){
+	    			//Post failed
+	    			res.send('Failed request from remote API:' + errResponse.error.statusCode + ' ' + errResponse.error.message);
+	    			return 0;
+
+	    		})
+		
+
+
+			}
+		});	
+	});
+
+
+	app.listen(port, function() {
+		console.log("Listening on " + port);
+	});
+
+
+}
+
+
+/***************************************************************************************
+logError - Log the error information
+Inputs - Error type, error object
+Outputs - None
+***************************************************************************************/
+function logError(errType, err){
+	console.log('---' + errType + '---');
+	console.error(err);
+	console.log('--------------------');
+}
+
+
+/***************************************************************************************
+fetchJSON - Make a JSON request
+Inputs - address to fetch, optional arguments
+Outputs - Promise
+Callbacks - None
+***************************************************************************************/
+async function fetchJSON(fromAddress,args){
+	var options = {uri:fromAddress, json:true};
+	if (args){
+		for(arg in args){
+			options[arg] = args[arg];
+		}
+	}
+    return rp(options);
+}
 
 
 
@@ -145,38 +225,14 @@ function getModelByName(reportName,callback){
 	callback(modelInfo,(modelInfo === undefined));
 }
 
-/***************************************************************************************
-getModels - Retrieve the models 
-Inputs - Path
-Outputs - Array of models
-Callbacks - None
-***************************************************************************************/
-function getModels(modelPath){
-	var models = {};
-	var files = fs.readdirSync(modelPath);
-
-	for (var i=0; i<files.length; i++) {
-    	var modelName = files[i];
-
-    	if(modelName.indexOf('report.settings.json') > -1) {
-    		//Load the model information
-    		var modelInfo = getModelInfo(path.join(modelPath,modelName))
-    		models[modelInfo.name]=modelInfo;
-		}
-    }
-
-    return models;
-}
 
 /***************************************************************************************
-getModelInfo - Parse the report model information 
-Inputs - Full path to the file
+parseModelInfo - Parse the report model information 
+Inputs - model string
 Outputs - Report information
 Callbacks - None
 ***************************************************************************************/
-function getModelInfo(modelFile){
-	var model = JSON.parse(fs.readFileSync(modelFile, 'utf8'));
-
+function parseModelInfo(model){
 	var info = {
 		name:'',
 		endpoint:'',
@@ -200,13 +256,23 @@ function getModelInfo(modelFile){
 				exclude: attr['x-data-exclude'] || false,
 				render: attr.hasOwnProperty("x-data-render")? attr['x-data-render'] : true
 			}
+
+		if(attr['x-data-usersend'] === false){
+			field.exclude = true;
+		}
 		
 		info.fields.push(field);
 	}
 
+	/*
+	if (info.name == 'genreport') {
+		console.log(info);
+		process.exit(0);
+	};
+	*/
+
 	return info;
 }
-
 
 /***************************************************************************************
 sanitizeAlphaNumeric - Sanitize the given string to ensure only alpha numeric allowed 
