@@ -25,7 +25,18 @@
 
 		  <div class="form-group">
 		    <label for="<%=input.name%>"><%=input.description%></label>
-		    <input type="text" class="form-control reportitem" id="<%=input.name%>" name="fld-<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Enter <%=input.description%>" value="<%= input.default %>">
+
+		    <% if(input.type === "enumeration"){ %>
+		    	<select class="form-control reportitem" id="<%=input.name%>" name="fld-<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Select <%=input.description%>" value="<%= input.default %>">
+		    		<% for(enumItem of input.enum){ %>
+		    			<option value=<%=enumItem.val%>><%= enumItem.display %></option>
+		    		<% } %>
+		    		
+		    	</select>
+		    	
+		    <% }else{ %>
+		    	<input type="text" class="form-control reportitem" id="<%=input.name%>" name="fld-<%=input.name%>" aria-describedby="<%=input.description%>" placeholder="Enter <%=input.description%>" value="<%= input.default %>">
+		    <% } %>
 		    
 		  </div>
 

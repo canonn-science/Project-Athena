@@ -260,16 +260,31 @@ function parseModelInfo(model){
 		if(attr['x-data-usersend'] === false){
 			field.exclude = true;
 		}
+
+		if(attr.type == "enumeration"){
+			field.enum = [];
+			var enumList = attr.enum || [];
+
+			for(item of enumList){
+				field.enum.push({val:item,display:item})
+			}
+
+			console.log(field.enum);
+			
+		}
+
+		
 		
 		info.fields.push(field);
 	}
 
 	/*
-	if (info.name == 'genreport') {
+	if (info.name == 'bmreport') {
 		console.log(info);
 		process.exit(0);
 	};
 	*/
+	
 
 	return info;
 }
