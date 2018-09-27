@@ -152,7 +152,7 @@ function serverListen(){
 				}
 
 				//Send data
-				fetchJSON('https://api.canonn.tech:2083/' + reportName,{ method: 'POST', body: reportRequest}).then(function (response) {
+				fetchJSON('https://api.canonn.tech:2083/' + modelInfo.endpoint,{ method: 'POST', body: reportRequest}).then(function (response) {
 					//Post succeeded
 					modelInfo.id = response.id;
 					res.render('pages/submitted',{model:modelInfo});
@@ -240,7 +240,9 @@ function parseModelInfo(model){
 		fields:[]
 	}
 
-	info.endpoint = model.info.endpoint;
+	//Get the endpoint and cleanup preceding path separators in the URI
+	info.endpoint = model.info.endpoint.replace(/^\//,'');
+
 	info.name = model.info.name;
 	info.title = model.info.description;
 	
@@ -268,23 +270,13 @@ function parseModelInfo(model){
 			for(item of enumList){
 				field.enum.push({val:item,display:item})
 			}
-
-			console.log(field.enum);
-			
+		
 		}
 
 		
 		
 		info.fields.push(field);
 	}
-
-	/*
-	if (info.name == 'bmreport') {
-		console.log(info);
-		process.exit(0);
-	};
-	*/
-	
 
 	return info;
 }
