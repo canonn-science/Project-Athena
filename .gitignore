@@ -71,3 +71,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Get rid of package lock
+package-lock.json
