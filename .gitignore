@@ -71,5 +71,6 @@ typings/
 
 # Serverless directories
 .serverless
-/obj/Debug
-/bin
+
+# Get rid of package lock
+package-lock.json
