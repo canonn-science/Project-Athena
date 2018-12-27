@@ -14,12 +14,16 @@ var appInfo = {
 var address = 'api.canonn.tech';
 
 //Change address?
-if(process.env.NODE_ENV === 'development'){
-	//Development
-	address = 'api.canonn.tech:2083';
-}else if(process.env.NODE_ENV === 'staging'){
-	//Staging
-	address = 'api.canonn.tech:2053';	
+if (process.env.NODE_ENV === 'development') {
+    //Development
+    console.log('Environment: Development');
+    address = 'api.canonn.tech:2083';
+} else if (process.env.NODE_ENV === 'staging') {
+    //Staging
+    console.log('Environment: Staging');
+    address = 'api.canonn.tech:2053';
+} else {
+    console.log('Environment: Production');
 }
 
 // Get the directory
@@ -120,7 +124,7 @@ function serverListen(){
 		//Offline?
 		if(false === appInfo.online){
 			return res.render('pages/offline');
-		}
+        }
 
 		var reportName = sanitizeAlphaNumeric(req.params.reportname);
 
